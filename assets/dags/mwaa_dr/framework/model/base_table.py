@@ -374,11 +374,15 @@ class BaseTable:
                     conn.rollback()
                     error_msg = str(e)
                     if "duplicate key" in error_msg or "UniqueViolation" in error_msg:
-                        print(f"Skipping batch of {len(batch)} rows due to duplicate key conflict: {error_msg.splitlines()[0]}")
+                        print(
+                            f"Skipping batch of {len(batch)} rows due to duplicate key conflict: {error_msg.splitlines()[0]}"
+                        )
                         skip_counter += len(batch)
                     else:
                         raise
-            print(f"Inserted {insert_counter} records, skipped {skip_counter} duplicates")
+            print(
+                f"Inserted {insert_counter} records, skipped {skip_counter} duplicates"
+            )
         finally:
             if cursor:
                 cursor.close()
