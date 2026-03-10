@@ -77,7 +77,6 @@ This solution is a part of an AWS blog series on MWAA Disaster Recovery. Please 
 
 > [!NOTE]
 > The project currently supports the following versions of MWAA:
-> - **2.11.1**
 > - **2.11.0**
 > - **2.10.3**
 > - **2.10.1**
