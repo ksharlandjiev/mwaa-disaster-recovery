@@ -597,7 +597,9 @@ class TestBaseTable:
             mock_sql_raw_connection.return_value.commit.assert_called_once()
             mock_sql_raw_connection.return_value.close.assert_called_once()
 
-    def test_restore_duplicate_key_skips_batch(self, mock_context, mock_sql_raw_connection):
+    def test_restore_duplicate_key_skips_batch(
+        self, mock_context, mock_sql_raw_connection
+    ):
         task_instance = BaseTable(
             name="task_instance", model=DependencyModel(), columns=["dag_id", "state"]
         )
@@ -608,9 +610,7 @@ class TestBaseTable:
             io.StringIO(sample_data) as store,
             patch.object(task_instance, "read", return_value=store),
         ):
-            mock_cursor = (
-                mock_sql_raw_connection.return_value.cursor.return_value
-            )
+            mock_cursor = mock_sql_raw_connection.return_value.cursor.return_value
             mock_cursor.copy_expert.side_effect = Exception(
                 "duplicate key value violates unique constraint"
             )
@@ -621,7 +621,9 @@ class TestBaseTable:
             mock_sql_raw_connection.return_value.commit.assert_not_called()
             mock_sql_raw_connection.return_value.close.assert_called_once()
 
-    def test_restore_unique_violation_skips_batch(self, mock_context, mock_sql_raw_connection):
+    def test_restore_unique_violation_skips_batch(
+        self, mock_context, mock_sql_raw_connection
+    ):
         task_instance = BaseTable(
             name="task_instance", model=DependencyModel(), columns=["dag_id", "state"]
         )
@@ -632,9 +634,7 @@ class TestBaseTable:
             io.StringIO(sample_data) as store,
             patch.object(task_instance, "read", return_value=store),
         ):
-            mock_cursor = (
-                mock_sql_raw_connection.return_value.cursor.return_value
-            )
+            mock_cursor = mock_sql_raw_connection.return_value.cursor.return_value
             mock_cursor.copy_expert.side_effect = Exception(
                 "UniqueViolation: could not insert"
             )
@@ -645,7 +645,9 @@ class TestBaseTable:
             mock_sql_raw_connection.return_value.commit.assert_not_called()
             mock_sql_raw_connection.return_value.close.assert_called_once()
 
-    def test_restore_non_duplicate_error_raises(self, mock_context, mock_sql_raw_connection):
+    def test_restore_non_duplicate_error_raises(
+        self, mock_context, mock_sql_raw_connection
+    ):
         task_instance = BaseTable(
             name="task_instance", model=DependencyModel(), columns=["dag_id", "state"]
         )
@@ -656,12 +658,8 @@ class TestBaseTable:
             io.StringIO(sample_data) as store,
             patch.object(task_instance, "read", return_value=store),
         ):
-            mock_cursor = (
-                mock_sql_raw_connection.return_value.cursor.return_value
-            )
-            mock_cursor.copy_expert.side_effect = Exception(
-                "connection refused"
-            )
+            mock_cursor = mock_sql_raw_connection.return_value.cursor.return_value
+            mock_cursor.copy_expert.side_effect = Exception("connection refused")
 
             with pytest.raises(Exception, match="connection refused"):
                 task_instance.restore(**mock_context)
@@ -669,7 +667,9 @@ class TestBaseTable:
             mock_sql_raw_connection.return_value.rollback.assert_called_once()
             mock_sql_raw_connection.return_value.close.assert_called_once()
 
-    def test_restore_mixed_duplicate_and_success(self, mock_context, mock_sql_raw_connection):
+    def test_restore_mixed_duplicate_and_success(
+        self, mock_context, mock_sql_raw_connection
+    ):
         task_instance = BaseTable(
             name="task_instance",
             model=DependencyModel(),
@@ -683,9 +683,7 @@ class TestBaseTable:
             io.StringIO(sample_data) as store,
             patch.object(task_instance, "read", return_value=store),
         ):
-            mock_cursor = (
-                mock_sql_raw_connection.return_value.cursor.return_value
-            )
+            mock_cursor = mock_sql_raw_connection.return_value.cursor.return_value
             mock_cursor.copy_expert.side_effect = [
                 Exception("duplicate key value violates unique constraint"),
                 None,
